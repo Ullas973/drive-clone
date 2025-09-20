@@ -68,7 +68,7 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
-  body("username").trim().isLength({ min: 3 }),
+  body("email").trim().isEmail().isLength({ min: 13 }),
   body("password").trim().isLength({ min: 5 }),
   async (req, res) => {
     const errors = validationResult(req);
@@ -80,15 +80,15 @@ router.post(
       });
     }
 
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     const user = await userModel.findOne({
-      username: username, // finding user by username
+      email: email, // finding user by email
     });
 
     if (!user) {
       return res.status(400).json({
-        message: "Invalid username or password", // if user not found
+        message: "Invalid email or password", // if user not found
       });
     }
 
@@ -96,7 +96,7 @@ router.post(
 
     if (!ismatch) {
       return res.status(400).json({
-        message: "Invalid username or password", // if password does not match
+        message: "Invalid email or password", // if password does not match
       });
     }
 
